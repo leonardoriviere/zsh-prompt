@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export BASE_WORK_DIR="/Users/leonardoriviere/Documents/Work"
+
 # Colored ls
 source $(dirname $(gem which colorls))/tab_complete.sh
 
@@ -12,6 +14,8 @@ alias ..="cd .."
 alias cd..="cd .."
 alias g="git"
 alias repo='cd $BASE_WORK_DIR'
+alias lg='cd $BASE_WORK_DIR/LG/escribehost'
+alias inm='cd $BASE_WORK_DIR/Inmediative'
 alias resetdock="osascript -e 'quit application \"Dock\"'"
 alias resetaudio="sudo killall coreaudiod"
 
