@@ -1,11 +1,13 @@
 #!/bin/bash
 
 export BASE_WORK_DIR="/Users/leonardoriviere/Documents/Work"
+export PATH=$PATH:/Applications/MAMP/Library/bin
 
 # Colored ls
 source $(dirname $(gem which colorls))/tab_complete.sh
 
 # USEFUL COMMANDS
+alias mysql="/Applications/MAMP/Library/bin/mysql --host=localhost -uroot -proot"
 alias ls="colorls"
 alias lc='ls -lA --sd'
 alias l="ls -lt"
