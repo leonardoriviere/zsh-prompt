@@ -78,6 +78,10 @@ function glog(){
   git log -$@ --oneline
 }
 
+function gdiff(){
+  git diff HEAD $@
+}
+
 function cot(){
   #branch=`git branch | awk '{if ($1 == "*"){print $2}}'`
   branch=`git branch | awk '{if ($1 == "*"){print $2}}' | awk -F '_' '{print $1}'`
@@ -122,3 +126,8 @@ function glp(){
 
 # Setting git alias for logging
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+function esh() {
+  echo "ESH - Using ${1} db.properties";
+  sudo cp /opt/escribe/conf/db.properties.${1} /opt/escribe/conf/db.properties;
+}
