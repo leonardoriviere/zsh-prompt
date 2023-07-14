@@ -9,9 +9,22 @@ export ANDROID_HOME=/usr/local/Caskroom/android-sdk/3859397,26.0.1
 #export PATH=$ANDROID_HOME/tools:$PATH
 #export ANDROID_HOME=/Users/leonardoriviere/Library/Android/sdk
 #export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+export LG_BASE_DIR=/Users/leonardoriviere/Documents/Work/LG
+BLUE='\e[34m'
+GREEN='\e[92m'
+RED='\033[0;31m'
+RED_BG='\e[101m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
 # Colored ls
-source $(dirname $(gem which colorls))/tab_complete.sh
+# source $(dirname $(gem which colorls))/tab_complete.sh
 
 # USEFUL COMMANDS
 alias mysql="/Applications/MAMP/Library/bin/mysql --host=localhost -uroot -proot"
@@ -23,8 +36,7 @@ alias ..="cd .."
 alias cd..="cd .."
 alias g="git"
 alias repo='cd $BASE_WORK_DIR'
-alias lg='cd $BASE_WORK_DIR/LG/escribehost'
-alias inm='cd $BASE_WORK_DIR/Inmediative'
+alias lg='cd $BASE_WORK_DIR/Workspace_LG/escribehost'
 alias resetdock="osascript -e 'quit application \"Dock\"'"
 alias resetaudio="sudo killall coreaudiod"
 
@@ -124,10 +136,43 @@ function glp(){
   git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -p
 }
 
+function gfu(){
+  git forgit add
+  git forgit fixup
+}
+
 # Setting git alias for logging
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 function esh() {
   echo "ESH - Using ${1} db.properties";
   sudo cp /opt/escribe/conf/db.properties.${1} /opt/escribe/conf/db.properties;
+}
+
+function migs() {
+  cd $LG_BASE_DIR/escribehost/migrations
+  ENV=$1
+  echo '';
+  echo -e "$BLUE>> Getting all pending migrations for ${NC}${RED_BG}${ENV}${NC}";
+  PENDING=`./migrate status --env=$1 | grep ' ...pending... '`;
+  AMOUNT=`echo $PENDING | awk NF | wc -l`
+  echo -e "$BLUE>> Pending migrations on ${ENV}: ${AMOUNT}";
+	if [ $AMOUNT -gt 0 ];
+  then
+    echo '';
+    echo -e $CYAN $PENDING $NC;
+    echo '';
+    echo -e "$BLUE>> Apply all pending migrations?: [y/n] $NC";
+    read apply;
+    echo -e $BLUE;
+    if [[ $apply =~ 'y|Y' ]];
+    then
+      ./migrate pending --env=$ENV | grep 'MyBatis Migrations'
+      echo -e "$GREEN>> Success. $AMOUNT migrations have been applied. $NC"
+    else
+      echo -e "$RED>> Aborted. 0 migrations have been applied. $NC"
+    fi
+  else
+    echo -e "$GREEN>> No pending migrations need to be applied. $NC"
+  fi
 }
