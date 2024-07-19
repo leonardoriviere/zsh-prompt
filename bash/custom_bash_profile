@@ -176,3 +176,27 @@ function migs() {
     echo -e "$GREEN>> No pending migrations need to be applied. $NC"
   fi
 }
+
+backup_remote_branch() {
+  # Get the current branch name
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+  # Get the current date and time in the format YYYYMMDDHHMM
+  timestamp=$(date +'%Y%m%d%H%M')
+
+  # Create the new branch name with the timestamp
+  new_branch="${current_branch}_v${timestamp}"
+
+  # Fetch the latest branches from the remote
+  git fetch
+
+  # Create and checkout the new branch from the remote branch
+  git checkout -b "$new_branch" "origin/$current_branch"
+
+  echo "New branch '$new_branch' created from 'origin/$current_branch'."
+
+  # Checkout back to the original branch
+  git checkout "$current_branch"
+
+}
+
